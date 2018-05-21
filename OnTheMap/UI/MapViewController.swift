@@ -15,10 +15,14 @@ class MapViewController: UIViewController {
     @IBAction func reload(_ sender: Any) {
         populateData()
     }
-    
-    
+    @IBAction func logOut(_ sender: Any) {
+        udacityClient.logOut()
+        self.dismiss(animated: true, completion: nil)
+    }
+    private let udacityClient: UdacityClient = UdacityClient.shared
     private let parseClient: ParseClient = ParseClient.shared
-    var students: [StudentLocations] = [StudentLocations]()
+    private let sharedData: SharedData = SharedData.sharedInstance
+    var students: [StudentLocation] = [StudentLocation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,12 +34,13 @@ class MapViewController: UIViewController {
     }
     
     func populateData() {
-        parseClient.getStudentLocations(completion: { (students) in
-            self.students = students
+        mapView.removeAnnotations(mapView.annotations)
+        parseClient.getStudentLocations(completion: { () in
+            self.students = self.sharedData.studentLocations
             for student in self.students {
-                let location = Locations(title: "\(student.firstName) \(student.lastName)",
-                    subtitle: student.mediaURL,
-                    coordinate: CLLocationCoordinate2D(latitude: student.latitude, longitude: student.longitude))
+                let location = Locations(title: "\(student.firstName ?? "") \(student.lastName ?? "")",
+                    subtitle: student.mediaURL ?? "",
+                    coordinate: CLLocationCoordinate2D(latitude: student.latitude ?? 0.0, longitude: student.longitude ?? 0.0))
                 performUIUpdatesOnMain {
                     self.mapView.addAnnotation(location)
                 }

@@ -7,3 +7,10 @@
 //
 
 import Foundation
+
+struct LoginCredentials {
+    static var sessionID = ""
+    static var accountKey = ""
+    static var firstName = ""
+    static var lastName = ""
+}

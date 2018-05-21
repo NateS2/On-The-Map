@@ -7,3 +7,11 @@
 //
 
 import Foundation
+
+class SharedData: Codable{
+    
+    static let sharedInstance = SharedData()
+    var studentLocations: [StudentLocation] = []
+    
+    private init() {}
+}
